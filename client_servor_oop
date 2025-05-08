@@ -1,0 +1,77 @@
+package com.sdmcet.cse.oop.Threads;
+
+public class ClientServorDemo {
+	public static void main(String args[]) {
+		MainFixed q = new MainFixed();
+		new ClientFixed(q);
+		new ServorFixed(q);
+
+		System.out.println("Press Control-C to stop.");
+	}
+}
+
+//A correct implementation of a producer and consumer.
+class MainFixed {
+
+	boolean valueSet = false;
+
+	synchronized void get() {
+		while (!valueSet)
+			try {
+				wait();
+
+			} catch (InterruptedException e) {
+				System.out.println("InterruptedException caught");
+			}
+
+		System.out.println("Got request form  client ");
+		valueSet = false;
+		notify();
+
+	}
+
+	synchronized void req(int i) {
+		while (valueSet)
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				System.out.println("InterruptedException caught");
+			}
+
+		valueSet = true;
+		System.out.println("server provided the required request\n");
+		notify();
+	}
+}
+
+class ClientFixed implements Runnable {
+	MainFixed q;
+
+	ClientFixed(MainFixed q) {
+		this.q = q;
+		new Thread(this, "Client").start();
+	}
+
+	public void run() {
+		int i = 0;
+
+		while (i <= 10) {
+			q.req(i++);
+		}
+	}
+}
+
+class ServorFixed implements Runnable {
+	MainFixed q;
+
+	ServorFixed(MainFixed q) {
+		this.q = q;
+		new Thread(this, "Consumer").start();
+	}
+
+	public void run() {
+		while (true) {
+			q.get();
+		}
+	}
+}
