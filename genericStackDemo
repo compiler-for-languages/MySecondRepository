@@ -1,0 +1,76 @@
+package generics;
+
+public class StackDemo {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Stack<Integer> st = new Stack(10);
+		st.push(10);
+		st.push(30);
+     	Integer el = st.pop();
+		System.out.println(el + " is the poped element");
+		st.display();
+System.out.println("---------------------------------------------\n Double Stack");
+		Stack<Double> st1=new Stack(5);
+		st1.push(5.5);
+		st1.push(34.9);
+		st1.push(349.90);
+		Double num=st1.pop();
+		System.out.println(num + " is the poped element");
+		st1.display();
+	}
+
+}
+
+class Stack<T extends Number> {
+	T[] arr;
+	int top;
+
+	Stack(int size) {
+		arr = (T[]) new Number[size];
+		top = -1;
+	}
+
+	void push(T ele) {
+		try {
+			if (this.top == 9) {
+				throw new OverFlowException("stack overflow");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		arr[++top] = ele;
+		System.out.println(arr[top] + " element is inserted to the stack");
+	}
+
+	T pop() {
+		try {
+			if (this.top == -1) {
+				throw new UnderFlowException("stack overflow");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return arr[top--];
+
+	}
+
+	void display() {
+		System.out.println("Stack contains :");
+		for (int i = 0; i <= top; i++) {
+			System.out.println(arr[i]);
+		}
+	}
+}
+
+class OverFlowException extends Exception {
+	OverFlowException(String message) {
+		super(message);
+	}
+}
+
+class UnderFlowException extends Exception {
+	UnderFlowException(String message) {
+		super(message);
+	}
+}
